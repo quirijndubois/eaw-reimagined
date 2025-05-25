@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://dw3l7dgbcvlpp"]
+
+[ext_resource type="Script" uid="uid://covtreymta761" path="res://scripts/game_objects/Ship.gd" id="1_j7upq"]
+[ext_resource type="ArrayMesh" uid="uid://c147eb2lxlffx" path="res://Models/isd.obj" id="2_k6a1h"]
+[ext_resource type="Script" uid="uid://bd4vb18dhafue" path="res://scripts/game_objects/Turret.gd" id="3_k6a1h"]
+
+[node name="Isd" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
+script = ExtResource("1_j7upq")
+mesh_instance = NodePath("Isd")
+ship_name = "Imperial star destroyer"
+hull_strength = 1000
+shield_strength = 1000
+hull_health = 1000
+shield_health = 1000
+ally = true
+
+[node name="Turret1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.249863, 0.0847595, -0.319291)
+script = ExtResource("3_k6a1h")
+
+[node name="Turret2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.085, -0.319)
+script = ExtResource("3_k6a1h")
+
+[node name="Turret3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.337632, 0.0744359, -0.778916)
+script = ExtResource("3_k6a1h")
+
+[node name="Turret4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.338, 0.075, -0.779)
+script = ExtResource("3_k6a1h")
+
+[node name="Isd" type="MeshInstance3D" parent="."]
+mesh = ExtResource("2_k6a1h")

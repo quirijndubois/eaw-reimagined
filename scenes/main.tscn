@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://ctqsk2q1di3jp"]
+
+[ext_resource type="Script" uid="uid://bnlnpj55p5cvl" path="res://scripts/Scene.gd" id="1_jsk3o"]
+[ext_resource type="Script" uid="uid://ekyj0fqg5ptf" path="res://scripts/interaction/camera_movement.gd" id="2_i5arm"]
+[ext_resource type="Script" uid="uid://or0kkye1k77d" path="res://scripts/interaction/mouse_selection_handler.gd" id="5_jsk3o"]
+[ext_resource type="PackedScene" uid="uid://dw3l7dgbcvlpp" path="res://prefabs/ISD.tscn" id="5_tbgi4"]
+[ext_resource type="Script" uid="uid://xyfdlm4ckwpq" path="res://scripts/ui/box_drawer.gd" id="7_wc5p8"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a202f"]
+sky_top_color = Color(0, 0, 0, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_noarx"]
+sky_material = SubResource("ProceduralSkyMaterial_a202f")
+
+[sub_resource type="Environment" id="Environment_a0tk4"]
+background_mode = 2
+sky = SubResource("Sky_noarx")
+tonemap_mode = 2
+glow_enabled = true
+glow_bloom = 0.07
+glow_blend_mode = 1
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_jsk3o")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_a0tk4")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.415369, 0.114979, 0.902357, -0.892732, 0.24197, 0.380106, -0.174639, -0.963447, 0.203152, 0.0336328, 0, 0)
+shadow_enabled = true
+shadow_blur = 0.0
+
+[node name="CameraNode" type="Node3D" parent="."]
+transform = Transform3D(0.645911, 0.527881, -0.55149, 0, 0.7224, 0.691475, 0.763413, -0.446631, 0.466606, 0, 0, 0)
+script = ExtResource("2_i5arm")
+
+[node name="Camera3D" type="Camera3D" parent="CameraNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+current = true
+fov = 60.0
+
+[node name="selection_handler" type="Node3D" parent="."]
+script = ExtResource("5_jsk3o")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="selection_handler"]
+
+[node name="SelectionRectangle" type="ColorRect" parent="selection_handler/CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("7_wc5p8")
+
+[node name="Isd" parent="." instance=ExtResource("5_tbgi4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.736584, -0.910392, -0.374219)
+laser_color = Color(0.15, 1, 0, 1)
+
+[node name="Isd2" parent="." instance=ExtResource("5_tbgi4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15381, -0.980319, -0.609424)
+laser_color = Color(1, 0.633333, 0, 1)
+ally = false
