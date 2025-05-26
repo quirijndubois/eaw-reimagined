@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://dw3l7dgbcvlpp"]
+[gd_scene load_steps=5 format=3 uid="uid://dw3l7dgbcvlpp"]
 
 [ext_resource type="Script" uid="uid://covtreymta761" path="res://scripts/game_objects/Ship.gd" id="1_j7upq"]
 [ext_resource type="ArrayMesh" uid="uid://c147eb2lxlffx" path="res://Models/isd.obj" id="2_k6a1h"]
 [ext_resource type="Script" uid="uid://bd4vb18dhafue" path="res://scripts/game_objects/Turret.gd" id="3_k6a1h"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_k6a1h"]
+viewport_path = NodePath("Sprite3D/SubViewport")
 
 [node name="Isd" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
 script = ExtResource("1_j7upq")
@@ -17,18 +20,91 @@ ally = true
 [node name="Turret1" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.249863, 0.0847595, -0.319291)
 script = ExtResource("3_k6a1h")
+laser_color = Color(0.3825, 1, 0.35, 1)
 
 [node name="Turret2" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.085, -0.319)
 script = ExtResource("3_k6a1h")
+laser_color = Color(0.384314, 1, 0.34902, 1)
 
 [node name="Turret3" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.337632, 0.0744359, -0.778916)
 script = ExtResource("3_k6a1h")
+laser_color = Color(0.384314, 1, 0.34902, 1)
 
 [node name="Turret4" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.338, 0.075, -0.779)
 script = ExtResource("3_k6a1h")
+laser_color = Color(0.384314, 1, 0.34902, 1)
 
 [node name="Isd" type="MeshInstance3D" parent="."]
 mesh = ExtResource("2_k6a1h")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(0.325, 0, 0, 0, 0.325, 0, 0, 0, 0.325, 0, 0.867132, 0)
+billboard = 1
+no_depth_test = true
+texture = SubResource("ViewportTexture_k6a1h")
+
+[node name="SubViewport" type="SubViewport" parent="Sprite3D"]
+transparent_bg = true
+
+[node name="shieldHealth" type="ProgressBar" parent="Sprite3D/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -13.5
+offset_right = 256.0
+offset_bottom = 13.5
+grow_horizontal = 2
+grow_vertical = 2
+step = 1.0
+value = 100.0
+
+[node name="hullHealth" type="ProgressBar" parent="Sprite3D/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = 22.285
+offset_right = 256.0
+offset_bottom = 49.285
+grow_horizontal = 2
+grow_vertical = 2
+tooltip_text = "Kanker"
+step = 1.0
+value = 100.0
+
+[node name="Panel" type="Panel" parent="Sprite3D/SubViewport"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -59.215
+offset_right = 256.0
+offset_bottom = -19.215
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Sprite3D/SubViewport/Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -11.5
+offset_right = 89.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
