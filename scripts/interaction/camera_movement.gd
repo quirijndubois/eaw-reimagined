@@ -19,11 +19,24 @@ func handle_zoom_event(event):
 			camera.position[2] *= (1 - zoom_speed)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			camera.position[2] *= (1 + zoom_speed)
+	elif event is InputEventMagnifyGesture:
+		camera.position[2] *= 1 + (1 - event.factor) / 3
+
 
 @onready var rotating = false
 @onready var last_mouse_position = Vector2.ZERO
 @onready var rotation_sensitivity = 0.004  # Adjust to control rotation speed
 func handle_rotate_event(event):
+
+	if event is InputEventPanGesture:
+		if Input.is_key_pressed(KEY_SHIFT):
+			rotate_y(event.delta.x / 30)
+			rotate_object_local(Vector3.RIGHT, event.delta.y / 30)
+		else:
+			var delta_vector= Vector3(event.delta.x,0,event.delta.y)
+			delta_vector = delta_vector.rotated(Vector3.UP, rotation.y)
+			position += delta_vector / 10
+
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_MIDDLE:
 			if event.pressed and Input.is_key_pressed(KEY_SHIFT):
