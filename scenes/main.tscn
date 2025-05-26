@@ -1,6 +1,5 @@
-[gd_scene load_steps=9 format=3 uid="uid://ctqsk2q1di3jp"]
+[gd_scene load_steps=8 format=3 uid="uid://ctqsk2q1di3jp"]
 
-[ext_resource type="Script" uid="uid://bnlnpj55p5cvl" path="res://scripts/Scene.gd" id="1_jsk3o"]
 [ext_resource type="Script" uid="uid://ekyj0fqg5ptf" path="res://scripts/interaction/camera_movement.gd" id="2_i5arm"]
 [ext_resource type="Script" uid="uid://or0kkye1k77d" path="res://scripts/interaction/mouse_selection_handler.gd" id="5_jsk3o"]
 [ext_resource type="PackedScene" uid="uid://dw3l7dgbcvlpp" path="res://prefabs/ISD.tscn" id="5_tbgi4"]
@@ -24,7 +23,6 @@ glow_bloom = 0.07
 glow_blend_mode = 1
 
 [node name="World" type="Node3D"]
-script = ExtResource("1_jsk3o")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_a0tk4")
