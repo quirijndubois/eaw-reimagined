@@ -26,6 +26,7 @@ func update(delta):
 	var collision = check_collision()
 	if collision:
 		die()
+		collision.deal_damage(energy)
 	
 func check_collision():
 	var from = global_position + direction * 0.1
@@ -41,7 +42,6 @@ func check_collision():
 	return null
 
 func die():
-	# remove colored sphere from the scene
 	queue_free()
 
 func add_colored_sphere():

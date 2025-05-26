@@ -54,10 +54,14 @@ offset_bottom = 40.0
 script = ExtResource("7_wc5p8")
 
 [node name="Isd" parent="." instance=ExtResource("5_tbgi4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.736584, -0.910392, -0.374219)
-laser_color = Color(0.15, 1, 0, 1)
 
 [node name="Isd2" parent="." instance=ExtResource("5_tbgi4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15381, -0.980319, -0.609424)
-laser_color = Color(1, 0.633333, 0, 1)
+transform = Transform3D(-0.990268, 0, 0.139173, 0, 1, 0, -0.139173, 0, -0.990268, -3.10268, 4.76837e-07, 9.26871)
 ally = false
+
+[node name="Isd4" parent="." instance=ExtResource("5_tbgi4")]
+transform = Transform3D(-0.999955, 0, 0.00949455, 0, 1, 0, -0.00949455, 0, -0.999955, -0.51026, 4.76837e-07, 8.44138)
+ally = false
+
+[node name="Isd3" parent="." instance=ExtResource("5_tbgi4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.87969, 0, 2.10518)

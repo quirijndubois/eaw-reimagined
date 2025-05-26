@@ -1,11 +1,15 @@
 class_name Ship
 extends Node3D
 
+@onready var shield_health_bar = $Sprite3D/SubViewport/shieldHealth
+@onready var hull_health_bar = $Sprite3D/SubViewport/hullHealth
+@onready var ship_name_label = $Sprite3D/SubViewport/Panel/Label
+@onready var ship_name_panel = $Sprite3D/SubViewport/Panel
+
 @export var mesh_instance: MeshInstance3D
 
 @export var ship_name: String
 @export var hull_strength: int
-@export var laser_color: Color
 @export var shield_strength: int
 @export var hull_health: int
 @export var shield_health: int
@@ -13,14 +17,37 @@ extends Node3D
 
 @export var selected: bool
 
+@export var max_speed: float = 1
+@export var acceleration: float = 1
+
+@export var max_rotation_speed: float = 5
+@export var rotation_acceleration: float = .5
+
 var selection_circle_instance: MeshInstance3D
 var visible_material: StandardMaterial3D
 var invisible_material: StandardMaterial3D
 
+var angle = 0
+var location = Vector2.ZERO
+var z_offset = 0
+var speed = 0
+var angle_speed = 0
+
+var target_angle = 0
+var target_speed = 0
+
+
 func _ready() -> void:
+	target_angle = rotation.y
+	angle = rotation.y
+
 	create_collision_shape()
 	create_selection_circle()
 	set_selected(selected)
+	set_bars()
+
+	location = Vector2(global_position.x, global_position.z)
+	z_offset = global_position.y
 
 	add_to_group("Ships")
 	if ally:
@@ -37,9 +64,12 @@ func deal_damage(damage: int) -> void:
 		hull_health -= damage
 	else:
 		die()
+	
+	set_bars()
 
-func die() -> void:
-	pass
+
+func die():
+	queue_free()
 
 
 func create_collision_shape() -> void:
@@ -104,14 +134,17 @@ func create_selection_circle():
 	add_child(selection_circle_instance)
 
 func set_selected(value: bool) -> void:
-	if value:
+	selected = value
+
+	set_bars()
+
+	if selected:
 		add_to_group("Selected")
 		remove_from_group("Unselected")
 	else:
 		add_to_group("Unselected")
 		remove_from_group("Selected")
 	
-	selected = value
 	if selection_circle_instance:
 		var circle_mesh := selection_circle_instance.mesh as ImmediateMesh
 		if circle_mesh:
@@ -136,7 +169,7 @@ func get_closest(ships) -> Node3D:
 			closest_ship = ship
 	return closest_ship
 
-func _process(delta: float) -> void:
+func _handle_weapons() -> void:
 	var enemies = get_enemies()
 
 	var closest_enemy = get_closest(enemies)
@@ -151,3 +184,55 @@ func _process(delta: float) -> void:
 
 		if not closest_enemy:
 			turret.active = false
+
+func _set_position() -> void:
+	global_position = Vector3(location.x, z_offset, location.y)
+
+func _set_rotation() -> void:
+	rotation = Vector3(0, angle, 0)
+
+func _process(delta: float) -> void:
+	_handle_weapons()
+
+	var time_to_stop = angle_speed / rotation_acceleration
+	var angle_to_stop = angle_speed * time_to_stop / 2
+	
+	var target_angle_speed = 0
+	if abs(angle_to_stop) < abs(angle - target_angle):
+		target_angle_speed = -sign(angle-target_angle) * max_rotation_speed
+
+	if angle_speed < target_angle_speed:
+		angle_speed += rotation_acceleration * delta
+
+	if angle_speed > target_angle_speed:
+		angle_speed -= rotation_acceleration * delta
+
+
+	var direction_vector = Vector2(sin(angle), cos(angle))
+	location += direction_vector * speed * delta
+	angle += angle_speed * delta
+
+	_set_position()
+	_set_rotation()
+
+func set_bars():
+
+	shield_health_bar.modulate = Color(.5, .5, 1)
+	hull_health_bar.modulate = Color(.3, 1, .3)
+
+	if not selected:
+		shield_health_bar.modulate.a = 0
+		hull_health_bar.modulate.a = 0
+		ship_name_panel.modulate.a = 0
+	else:
+		shield_health_bar.modulate.a = 1
+		hull_health_bar.modulate.a = 1
+		ship_name_panel.modulate.a = 1
+
+	ship_name_label.text = ship_name
+
+	shield_health_bar.max_value = shield_strength
+	hull_health_bar.max_value = hull_strength
+ 
+	shield_health_bar.value = shield_health
+	hull_health_bar.value = hull_health
