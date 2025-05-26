@@ -121,9 +121,9 @@ func create_selection_circle():
 	circle_mesh.surface_begin(Mesh.PRIMITIVE_LINE_STRIP, visible_material)
 
 	for i in range(segments + 1):
-		var angle = TAU * i / float(segments)
-		var x = radius * cos(angle)
-		var z = radius * sin(angle)
+		var ang = TAU * i / float(segments)
+		var x = radius * cos(ang)
+		var z = radius * sin(ang)
 		circle_mesh.surface_add_vertex(Vector3(x, 0.01, z))
 
 	circle_mesh.surface_end()

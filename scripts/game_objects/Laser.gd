@@ -2,31 +2,39 @@ class_name DefaultLaser
 
 extends Node3D
 
-@export var energy: int = 10
+var energy: int = 10
 
-@export var brightness: float = 10
-@export var direction: Vector3 = Vector3.LEFT
-@export var speed: float = 10
-@export var color: Color = Color(.5, 1, .5)
-@export var size: Vector3 = Vector3(1e-2, 1e-2, 4e-1)
+var brightness: float = 10
+var direction: Vector3 = Vector3.LEFT
+var speed: float = 10
+var color: Color = Color(.5, 1, .5)
+var size: Vector3 = Vector3(1e-2, 1e-2, 4e-1)
+var distance_range: int = 50
 
+var distance_traveled: float = 0
 var emitter = null
 
 func _ready() -> void:
+	direction = direction.normalized()
 	add_colored_sphere()
 
 func _process(delta: float):
 	update(delta)
 
 func update(delta):
-	direction = direction.normalized()
+	
 	global_position += direction * speed * delta
+
+	distance_traveled += speed * delta
+
 	look_at(global_position + direction, Vector3.UP)
 	
 	var collision = check_collision()
 	if collision:
 		die()
 		collision.deal_damage(energy)
+	elif distance_traveled > distance_range:
+		die()
 	
 func check_collision():
 	var from = global_position + direction * 0.1

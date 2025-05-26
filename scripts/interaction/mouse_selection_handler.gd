@@ -16,15 +16,16 @@ func _unhandled_input(event: InputEvent) -> void:
 # --- Input Handlers ---
 
 func _handle_mouse_button(event: InputEventMouseButton) -> void:
-	if event.button_index != MOUSE_BUTTON_LEFT:
-		return
-
-	if event.pressed:
-		_start_drag(event.position)
-		_direct_select(event)
-	else:
-		if is_dragging:
-			_end_drag(event.position)
+	if event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_start_drag(event.position)
+			_direct_select(event)
+		else:
+			if is_dragging:
+				_end_drag(event.position)
+	elif event.button_index == MOUSE_BUTTON_RIGHT:
+		if not event.pressed:
+			spawn_ship("ISD", check_ground_hit(event.position))
 
 func _handle_mouse_motion(event: InputEventMouseMotion) -> void:
 	if not is_dragging:
@@ -90,3 +91,41 @@ func _deselect_all_if_needed() -> void:
 		for node in get_tree().get_nodes_in_group("Selected"):
 			if node is Ship and node.is_selected():
 				node.set_selected(false)
+
+func spawn_ship(ship_name: String, spawn_position: Vector3) -> Node3D:
+	var scene_path = "res://prefabs/" + ship_name + ".tscn"
+
+	var scene = load(scene_path)
+	
+	var instance = scene.instantiate()
+	if instance is Node3D:
+		instance.global_position = spawn_position
+
+		if spawn_position.z > 0:
+			instance.ally = false
+			instance.rotation.y = PI
+
+		add_child(instance)
+		return instance
+	else:
+		push_error("The instantiated scene is not of type Node3D.")
+		return null
+
+
+func check_ground_hit(mouse_position: Vector2):
+
+	var camera = get_viewport().get_camera_3d()
+
+	var from = camera.project_ray_origin(mouse_position)
+	var direction = camera.project_ray_normal(mouse_position)
+
+	# Plane is Z = 0 → normal = Vector3(0, 0, 1)
+	var plane_normal = Vector3(0, 1, 0)
+	var plane_point = Vector3(0, 0, 0)
+
+	var denom = direction.dot(plane_normal)
+
+	var t = (plane_point - from).dot(plane_normal) / denom
+	var hit_position = from + direction * t
+	
+	return hit_position - position
