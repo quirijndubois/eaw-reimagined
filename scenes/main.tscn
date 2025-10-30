@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://ctqsk2q1di3jp"]
 
-[ext_resource type="Script" path="res://scripts/interaction/camera_movement.gd" id="2_i5arm"]
+[ext_resource type="Script" uid="uid://ekyj0fqg5ptf" path="res://scripts/interaction/camera_movement.gd" id="2_i5arm"]
 [ext_resource type="PackedScene" uid="uid://dw3l7dgbcvlpp" path="res://prefabs/ISD.tscn" id="4_0wyd4"]
-[ext_resource type="Script" path="res://scripts/interaction/mouse_selection_handler.gd" id="5_jsk3o"]
-[ext_resource type="Script" path="res://scripts/ui/box_drawer.gd" id="7_wc5p8"]
+[ext_resource type="Script" uid="uid://or0kkye1k77d" path="res://scripts/interaction/mouse_selection_handler.gd" id="5_jsk3o"]
+[ext_resource type="Script" uid="uid://xyfdlm4ckwpq" path="res://scripts/ui/box_drawer.gd" id="7_wc5p8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a202f"]
 sky_top_color = Color(0, 0, 0, 1)
@@ -52,15 +52,8 @@ offset_bottom = 40.0
 script = ExtResource("7_wc5p8")
 
 [node name="Isd" parent="." instance=ExtResource("4_0wyd4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.38542, -9.53674e-07, -7.08758)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.08918)
 
 [node name="Isd2" parent="." instance=ExtResource("4_0wyd4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27244, -2.38419e-07, -5.20516)
-
-[node name="Isd3" parent="." instance=ExtResource("4_0wyd4")]
-transform = Transform3D(-0.998068, 0, 0.0621285, 0, 1, 0, -0.0621285, 0, -0.998068, -0.74161, 0, 5.05964)
-ally = false
-
-[node name="Isd4" parent="." instance=ExtResource("4_0wyd4")]
-transform = Transform3D(-0.904433, 0, -0.426616, 0, 1, 0, 0.426616, 0, -0.904433, 3.09382, 9.53674e-07, 4.16586)
+transform = Transform3D(-0.997852, 0, 0.0655076, 0, 1, 0, -0.0655076, 0, -0.997852, -0.367694, 0, 7.7871)
 ally = false
