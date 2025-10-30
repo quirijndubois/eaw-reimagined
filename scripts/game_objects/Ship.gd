@@ -27,18 +27,21 @@ var selection_circle_instance: MeshInstance3D
 var visible_material: StandardMaterial3D
 var invisible_material: StandardMaterial3D
 
+var path_instance: MeshInstance3D
+var visible_material_path: StandardMaterial3D
+var invisible_material_path: StandardMaterial3D
+
 var angle = 0
-var location = Vector2.ZERO
-var z_offset = 0
-var speed = 0
-var angle_speed = 0
+var tilt = 0
+var direction = Vector3.ZERO
 
-var target_angle = 0
-var target_speed = 0
-
+# heading is a cubic bezier curve, with from, control 1, control 2, to, t, length
+@onready var current_heading = [position, position, position, position]
+var current_heading_length = 0
+var current_heading_t = 0
 
 func _ready() -> void:
-	target_angle = rotation.y
+
 	angle = rotation.y
 
 	create_collision_shape()
@@ -46,15 +49,39 @@ func _ready() -> void:
 	set_selected(selected)
 	set_bars()
 
-	location = Vector2(global_position.x, global_position.z)
-	z_offset = global_position.y
-
 	add_to_group("Ships")
 	if ally:
 		add_to_group("Allies")
 	else:
 		add_to_group("Enemies")
 
+func _process(delta: float) -> void:
+	if path_instance:
+		path_instance.global_position = Vector3.ZERO
+		path_instance.global_rotation = Vector3.ZERO
+
+	if current_heading_length > 0:
+		var cubic_derivative = cubic_bezier_derivative(current_heading[0], current_heading[1], current_heading[2], current_heading[3], current_heading_t)
+		var cubic_derivative_length = cubic_derivative.length()
+		direction = cubic_derivative
+		angle = atan2(direction.x, direction.z)
+
+		var cubic_curvature = cubic_bezier_curvature(current_heading[0], current_heading[1], current_heading[2], current_heading[3], current_heading_t)
+		# tilt = -clamp(log(1+cubic_curvature), -.5, .5)
+
+		print(rotation)
+
+		if current_heading_t < 1:
+			var current_speed = clamp(1/abs(cubic_curvature), 0, max_speed)
+			current_heading_t += delta / cubic_derivative_length * current_speed
+		else:
+			current_heading_t = 1
+
+	position = cubic_bezier(current_heading[0], current_heading[1], current_heading[2], current_heading[3], current_heading_t)
+
+	_handle_weapons()
+	_set_rotation()
+	_set_direction()
 
 func deal_damage(damage: int) -> void:
 	if shield_health > 0:
@@ -62,7 +89,7 @@ func deal_damage(damage: int) -> void:
 	elif hull_health > 0:
 		shield_health = 0
 		hull_health -= damage
-	else:
+	else:	
 		die()
 	
 	set_bars()
@@ -70,7 +97,6 @@ func deal_damage(damage: int) -> void:
 
 func die():
 	queue_free()
-
 
 func create_collision_shape() -> void:
 	# Create StaticBody3D as parent node
@@ -133,6 +159,63 @@ func create_selection_circle():
 	selection_circle_instance.mesh = circle_mesh
 	add_child(selection_circle_instance)
 
+func create_path(start_position: Vector3, handle1: Vector3, handle2: Vector3,  end_position: Vector3, color: Color) -> void:
+	visible_material_path = StandardMaterial3D.new()
+	visible_material_path.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+
+	visible_material_path.albedo_color = color
+
+	visible_material_path.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+
+	invisible_material_path = visible_material_path.duplicate()
+
+	# Create circle mesh
+	var path_mesh := ImmediateMesh.new()
+	var segments: int = 64
+	path_mesh.clear_surfaces()
+	path_mesh.surface_begin(Mesh.PRIMITIVE_LINE_STRIP, visible_material_path)
+
+	for i in range(segments + 1):
+		path_mesh.surface_add_vertex(cubic_bezier(start_position, handle1, handle2, end_position, i / float(segments)))
+
+	path_mesh.surface_end()
+
+	# Create mesh instance
+	path_instance = MeshInstance3D.new()
+	path_instance.mesh = path_mesh
+	add_child(path_instance)
+
+func display_heading(target_position: Vector3, approach_vector: Vector3) -> void:
+	if path_instance:
+		remove_child(path_instance)
+	
+	var approach_magnitude = max(2,approach_vector.length())
+
+	var a = global_position
+	var b = global_position + direction*approach_magnitude 
+	var c = target_position - approach_vector
+	var d = target_position
+
+	create_path(a,b,c,d, Color.BLUE)
+
+func set_heading(target_position: Vector3, approach_vector: Vector3):
+	if path_instance:
+		remove_child(path_instance)
+	
+	var approach_magnitude = max(2,approach_vector.length())
+
+	var a = global_position
+	var b = global_position + direction*approach_magnitude 
+	var c = target_position - approach_vector
+	var d = target_position
+
+	current_heading = [a, b, c, d]
+	current_heading_t = 0
+	current_heading_length = cubic_bezier_length(a, b, c, d)
+
+	create_path(a,b,c,d, Color.RED)
+
+
 func set_selected(value: bool) -> void:
 	selected = value
 
@@ -185,35 +268,13 @@ func _handle_weapons() -> void:
 		if not closest_enemy:
 			turret.active = false
 
-func _set_position() -> void:
-	global_position = Vector3(location.x, z_offset, location.y)
 
 func _set_rotation() -> void:
-	rotation = Vector3(0, angle, 0)
+	rotation = Vector3(0, angle, tilt)
 
-func _process(delta: float) -> void:
-	_handle_weapons()
-
-	var time_to_stop = angle_speed / rotation_acceleration
-	var angle_to_stop = angle_speed * time_to_stop / 2
-	
-	var target_angle_speed = 0
-	if abs(angle_to_stop) < abs(angle - target_angle):
-		target_angle_speed = -sign(angle-target_angle) * max_rotation_speed
-
-	if angle_speed < target_angle_speed:
-		angle_speed += rotation_acceleration * delta
-
-	if angle_speed > target_angle_speed:
-		angle_speed -= rotation_acceleration * delta
-
-
-	var direction_vector = Vector2(sin(angle), cos(angle))
-	location += direction_vector * speed * delta
-	angle += angle_speed * delta
-
-	_set_position()
-	_set_rotation()
+func _set_direction() -> void:
+	direction = Vector3(sin(angle), 0, cos(angle)) 
+	direction = direction.normalized()
 
 func set_bars():
 
@@ -236,3 +297,44 @@ func set_bars():
  
 	shield_health_bar.value = shield_health
 	hull_health_bar.value = hull_health
+
+
+func cubic_bezier(a,b,c,d,t):
+	return pow(1-t,3)*a + 3*t*pow(1-t,2)*b + 3*t*t*(1-t)*c + pow(t,3)*d
+
+func cubic_bezier_derivative(a,b,c,d,t):
+	return 3*pow(1-t,2)*(b-a) + 6*t*(1-t)*(c-b) + 3*pow(t,2)*(d-c)
+
+func cubic_bezier_second_derivative(a,b,c,d,t):
+	return 6*(1-t)*(c-2*b+a) + 6*t*(d-2*c+b)
+
+
+func cubic_bezier_curvature(a, b, c, d, t) -> float:
+	var d1 = cubic_bezier_derivative(a, b, c, d, t)
+	var d2 = cubic_bezier_second_derivative(a, b, c, d, t)
+
+	var cross = d1.cross(d2)
+	var numerator = cross.length()
+	var denominator = pow(d1.length(), 3)
+
+	if denominator == 0.0:
+		return 0.0  # Degenerate or flat
+
+	# Use sign of the y-component of the cross product (since we're in x,z plane)
+	var _sign = signf(cross.y)
+
+	return _sign * (numerator / denominator)
+
+
+
+func cubic_bezier_length(a: Vector3, b: Vector3, c: Vector3, d: Vector3, segments := 100) -> float:
+	var length = 0.0
+	var prev_point = a
+
+	for i in range(1, segments + 1):
+		var t = float(i) / segments
+		var point = cubic_bezier(a, b, c, d, t)
+		length += prev_point.distance_to(point)
+		prev_point = point
+
+	return length
