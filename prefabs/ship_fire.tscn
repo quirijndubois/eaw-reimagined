@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bxmqfr7ntclv"]
+
+[ext_resource type="Script" path="res://scripts/game_objects/ShipFire.gd" id="1_shpfir"]
+
+[node name="ShipFire" type="Node3D"]
+script = ExtResource("1_shpfir")

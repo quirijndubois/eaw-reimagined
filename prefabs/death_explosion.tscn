@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ajvkze6asejx"]
+
+[ext_resource type="Script" path="res://scripts/game_objects/DeathExplosion.gd" id="1_dthexp"]
+
+[node name="DeathExplosion" type="Node3D"]
+script = ExtResource("1_dthexp")

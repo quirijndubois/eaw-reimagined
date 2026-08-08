@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dw3l7dgbcvlpp"]
+[gd_scene format=3 uid="uid://dw3l7dgbcvlpp"]
 
 [ext_resource type="Script" uid="uid://covtreymta761" path="res://scripts/game_objects/Ship.gd" id="1_j7upq"]
 [ext_resource type="ArrayMesh" uid="uid://c147eb2lxlffx" path="res://Models/isd.obj" id="2_k6a1h"]
@@ -7,7 +7,7 @@
 [sub_resource type="ViewportTexture" id="ViewportTexture_k6a1h"]
 viewport_path = NodePath("Sprite3D/SubViewport")
 
-[node name="Isd" type="Node3D" node_paths=PackedStringArray("mesh_instance")]
+[node name="Isd" type="Node3D" unique_id=1663823942 node_paths=PackedStringArray("mesh_instance")]
 script = ExtResource("1_j7upq")
 mesh_instance = NodePath("Isd")
 ship_name = "Imperial star destroyer"
@@ -16,40 +16,41 @@ shield_strength = 1000
 hull_health = 1000
 shield_health = 1000
 ally = true
+fire_range = 10.0
 
-[node name="Turret1" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.249863, 0.0847595, -0.319291)
+[node name="Turret1" type="Node3D" parent="." unique_id=605808101]
+transform = Transform3D(0.021455392, -0.6726772, 0.7396247, 0.36756697, 0.6932899, 0.6198739, -0.9297495, 0.25856203, 0.26212883, 0.249863, 0.0847595, -0.319291)
 script = ExtResource("3_k6a1h")
 laser_color = Color(0.3825, 1, 0.35, 1)
 
-[node name="Turret2" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.085, -0.319)
+[node name="Turret2" type="Node3D" parent="." unique_id=2016543157]
+transform = Transform3D(0.20450747, 0.6543074, -0.72805125, -0.17694479, 0.7562287, 0.62992746, 0.9627395, 0, 0.2704307, -0.25, 0.085, -0.319)
 script = ExtResource("3_k6a1h")
 laser_color = Color(0.384314, 1, 0.34902, 1)
 
-[node name="Turret3" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.337632, 0.0744359, -0.778916)
+[node name="Turret3" type="Node3D" parent="." unique_id=1214747189]
+transform = Transform3D(0.085905306, -0.69541776, 0.71345246, 0.08313332, 0.7186057, 0.6904308, -0.99282885, 0, 0.11954443, 0.337632, 0.0744359, -0.778916)
 script = ExtResource("3_k6a1h")
 laser_color = Color(0.384314, 1, 0.34902, 1)
 
-[node name="Turret4" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.338, 0.075, -0.779)
+[node name="Turret4" type="Node3D" parent="." unique_id=148912181]
+transform = Transform3D(0.088436276, 0.61202496, -0.7858782, -0.06844028, 0.7908385, 0.60818624, 0.9937278, 0, 0.111825965, -0.338, 0.075, -0.779)
 script = ExtResource("3_k6a1h")
 laser_color = Color(0.384314, 1, 0.34902, 1)
 
-[node name="Isd" type="MeshInstance3D" parent="."]
+[node name="Isd" type="MeshInstance3D" parent="." unique_id=1723112840]
 mesh = ExtResource("2_k6a1h")
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(0.325, 0, 0, 0, 0.325, 0, 0, 0, 0.325, 0, 0.867132, 0)
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=626954673]
+transform = Transform3D(0.325, 0, 0, 0, 0.325, 0, 0, 0, 0.325, -0.0014487803, 0.867132, 0.0007914305)
 billboard = 1
 no_depth_test = true
 texture = SubResource("ViewportTexture_k6a1h")
 
-[node name="SubViewport" type="SubViewport" parent="Sprite3D"]
+[node name="SubViewport" type="SubViewport" parent="Sprite3D" unique_id=541219126]
 transparent_bg = true
 
-[node name="shieldHealth" type="ProgressBar" parent="Sprite3D/SubViewport"]
+[node name="shieldHealth" type="ProgressBar" parent="Sprite3D/SubViewport" unique_id=633851174]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -64,7 +65,7 @@ grow_vertical = 2
 step = 1.0
 value = 100.0
 
-[node name="hullHealth" type="ProgressBar" parent="Sprite3D/SubViewport"]
+[node name="hullHealth" type="ProgressBar" parent="Sprite3D/SubViewport" unique_id=1284872714]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -80,7 +81,7 @@ tooltip_text = "Kanker"
 step = 1.0
 value = 100.0
 
-[node name="Panel" type="Panel" parent="Sprite3D/SubViewport"]
+[node name="Panel" type="Panel" parent="Sprite3D/SubViewport" unique_id=1330230443]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -93,7 +94,7 @@ offset_bottom = -19.215
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="Sprite3D/SubViewport/Panel"]
+[node name="Label" type="Label" parent="Sprite3D/SubViewport/Panel" unique_id=1891955648]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

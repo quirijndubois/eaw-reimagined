@@ -6,6 +6,20 @@ var dragging := false
 var drag_start_position := Vector3.ZERO
 var object_start_position := Vector3.ZERO
 
+const PATH_FOLLOW_SPEED := 2.5
+var _user_pan_timer := 0.0
+
+func _process(delta: float) -> void:
+	_user_pan_timer = maxf(0.0, _user_pan_timer - delta)
+	if dragging or _user_pan_timer > 0.0:
+		return
+	for node in get_tree().get_nodes_in_group("Selected"):
+		if node is Ship and node.path_t >= 0.0:
+			position.x = lerpf(position.x, node.global_position.x, delta * PATH_FOLLOW_SPEED)
+			position.z = lerpf(position.z, node.global_position.z, delta * PATH_FOLLOW_SPEED)
+			return
+
+
 func _unhandled_input(event):
 	handle_panning_event(event)
 	handle_zoom_event(event)
@@ -33,9 +47,10 @@ func handle_rotate_event(event):
 			rotate_y(event.delta.x / 30)
 			rotate_object_local(Vector3.RIGHT, event.delta.y / 30)
 		else:
+			_user_pan_timer = 0.5
 			var delta_vector= Vector3(event.delta.x,0,event.delta.y)
 			delta_vector = delta_vector.rotated(Vector3.UP, rotation.y)
-			position += delta_vector / 10
+			position += delta_vector * camera.position[2] / 55
 
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_MIDDLE:

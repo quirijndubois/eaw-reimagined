@@ -1,18 +1,19 @@
-[gd_scene load_steps=8 format=3 uid="uid://ctqsk2q1di3jp"]
+[gd_scene format=3 uid="uid://ctqsk2q1di3jp"]
 
+[ext_resource type="Script" uid="uid://bnilrpbgxhtev" path="res://scripts/cinema_camera.gd" id="1_cinema"]
 [ext_resource type="Script" uid="uid://ekyj0fqg5ptf" path="res://scripts/interaction/camera_movement.gd" id="2_i5arm"]
-[ext_resource type="PackedScene" uid="uid://dw3l7dgbcvlpp" path="res://prefabs/ISD.tscn" id="4_0wyd4"]
-[ext_resource type="Script" uid="uid://or0kkye1k77d" path="res://scripts/interaction/mouse_selection_handler.gd" id="5_jsk3o"]
+[ext_resource type="Script" uid="uid://ct06oekd8kwct" path="res://scripts/interaction/mouse_interaction_handler.gd" id="5_jsk3o"]
 [ext_resource type="Script" uid="uid://xyfdlm4ckwpq" path="res://scripts/ui/box_drawer.gd" id="7_wc5p8"]
+[ext_resource type="Script" uid="uid://dthccafnqofai" path="res://scripts/ui/hud.gd" id="9_hudscript"]
+[ext_resource type="Texture2D" uid="uid://dv43pbyoubnno" path="res://textures/starmap_2020_4k.exr" id="10_skytex"]
+[ext_resource type="Script" uid="uid://cgpxrsvxq1fa7" path="res://scripts/play_area.gd" id="11_playarea"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_a202f"]
-sky_top_color = Color(0, 0, 0, 1)
-sky_horizon_color = Color(0, 0, 0, 1)
-ground_bottom_color = Color(0, 0, 0, 1)
-ground_horizon_color = Color(0, 0, 0, 1)
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_001"]
+panorama = ExtResource("10_skytex")
+energy_multiplier = 0.06
 
 [sub_resource type="Sky" id="Sky_noarx"]
-sky_material = SubResource("ProceduralSkyMaterial_a202f")
+sky_material = SubResource("PanoramaSkyMaterial_001")
 
 [sub_resource type="Environment" id="Environment_a0tk4"]
 background_mode = 2
@@ -20,40 +21,43 @@ sky = SubResource("Sky_noarx")
 tonemap_mode = 2
 glow_enabled = true
 glow_bloom = 0.07
-glow_blend_mode = 1
 
-[node name="World" type="Node3D"]
+[node name="World" type="Node3D" unique_id=1643216512]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2055834394]
 environment = SubResource("Environment_a0tk4")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1101539014]
 transform = Transform3D(0.415369, 0.114979, 0.902357, -0.892732, 0.24197, 0.380106, -0.174639, -0.963447, 0.203152, 0.0336328, 0, 0)
 shadow_enabled = true
 shadow_blur = 0.0
 
-[node name="CameraNode" type="Node3D" parent="."]
+[node name="PlayArea" type="Node3D" parent="." unique_id=1624272187]
+script = ExtResource("11_playarea")
+
+[node name="CameraNode" type="Node3D" parent="." unique_id=1762630706]
+process_mode = 3
 transform = Transform3D(0.645911, 0.527881, -0.55149, 0, 0.7224, 0.691475, 0.763413, -0.446631, 0.466606, 0, 0, 0)
 script = ExtResource("2_i5arm")
 
-[node name="Camera3D" type="Camera3D" parent="CameraNode"]
+[node name="Camera3D" type="Camera3D" parent="CameraNode" unique_id=448354948]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 current = true
 fov = 60.0
 
-[node name="selection_handler" type="Node3D" parent="."]
+[node name="selection_handler" type="Node3D" parent="." unique_id=749353808]
+process_mode = 3
 script = ExtResource("5_jsk3o")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="selection_handler"]
+[node name="CanvasLayer" type="CanvasLayer" parent="selection_handler" unique_id=2014642286]
 
-[node name="SelectionRectangle" type="ColorRect" parent="selection_handler/CanvasLayer"]
+[node name="SelectionRectangle" type="ColorRect" parent="selection_handler/CanvasLayer" unique_id=975564795]
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("7_wc5p8")
 
-[node name="Isd" parent="." instance=ExtResource("4_0wyd4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -6.08918)
+[node name="CinemaCamera" type="Node3D" parent="." unique_id=367615316]
+script = ExtResource("1_cinema")
 
-[node name="Isd2" parent="." instance=ExtResource("4_0wyd4")]
-transform = Transform3D(-0.997852, 0, 0.0655076, 0, 1, 0, -0.0655076, 0, -0.997852, -0.367694, 0, 7.7871)
-ally = false
+[node name="HUD" type="CanvasLayer" parent="." unique_id=979682386]
+script = ExtResource("9_hudscript")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://boid_prefab"]
+
+[ext_resource type="Script" path="res://scripts/game_objects/Boid.gd" id="1_boid"]
+
+[node name="Boid" type="Node3D"]
+script = ExtResource("1_boid")

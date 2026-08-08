@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://ba0ekenyfgk03"]
+
+[ext_resource type="Script" uid="uid://dlqvfsuoy137y" path="res://scripts/game_objects/StarfighterSquad.gd" id="1_sqd"]
+
+[node name="StarfighterSquad" type="Node3D" unique_id=958687033]
+script = ExtResource("1_sqd")
+boid_max_speed = 1.0
+boid_min_speed = 0.5
+boid_turn_rate = 3.0
+boid_roll_rate = 3.0
+boid_sep_radius = 0.5
+boid_nbr_radius = 5.0
+w_sep = 1.0
+w_align = 5.0
+w_cohesion = 0.5
+boid_fire_dot = 0.9
