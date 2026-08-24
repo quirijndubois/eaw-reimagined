@@ -172,7 +172,7 @@ func _mat(tex: Texture2D, additive: bool) -> StandardMaterial3D:
 	var m := StandardMaterial3D.new()
 	m.transparency               = BaseMaterial3D.TRANSPARENCY_ALPHA
 	m.blend_mode                 = BaseMaterial3D.BLEND_MODE_ADD if additive \
-	                               else BaseMaterial3D.BLEND_MODE_MIX
+								   else BaseMaterial3D.BLEND_MODE_MIX
 	m.shading_mode               = BaseMaterial3D.SHADING_MODE_UNSHADED
 	m.cull_mode                  = BaseMaterial3D.CULL_DISABLED
 	m.vertex_color_use_as_albedo = true
